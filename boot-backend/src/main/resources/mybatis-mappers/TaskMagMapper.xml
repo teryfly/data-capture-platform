@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.TaskMagMapper">
+    <!--修改定时任务-->
+    <update id="updateTimingTask">
+         update VzDataQuality.dbo.tb_collectiontimingdata
+         <set>
+             <if test="data.task_id != null">
+                 task_id = #{data.task_id,jdbcType=VARCHAR},
+             </if>
+             <if test="data.company_id != null">
+                 company_id = #{data.company_id,jdbcType=VARCHAR},
+             </if>
+             <if test="data.time_stamp != null">
+                 time_stamp = #{data.time_stamp,jdbcType=VARCHAR},
+             </if>
+             <if test="data.status != null">
+                 status = #{data.status,jdbcType=VARCHAR},
+             </if>
+             <if test="data.tran_id != null">
+                 tran_id = #{data.tran_id,jdbcType=VARCHAR},
+             </if>
+             <if test="data.remark != null">
+                 remark = #{data.remark,jdbcType=VARCHAR},
+             </if>
+             <if test="data.update_time != null">
+                 update_time = #{data.update_time,jdbcType=TIMESTAMP},
+             </if>
+             <if test="data.prohibit_time != null">
+                 prohibit_time = #{data.prohibit_time,jdbcType=TIMESTAMP},
+             </if>
+             <if test="data.cron != null">
+                 cron = #{data.cron,jdbcType=VARCHAR},
+             </if>
+             <if test="data.work_untis_name != null">
+                 work_untis_name = #{data.work_untis_name,jdbcType=VARCHAR},
+             </if>
+             <if test="data.work_untis_code != null">
+                 work_untis_code = #{data.work_untis_code,jdbcType=VARCHAR},
+             </if>
+             <if test="data.type != null">
+                 type = #{data.type,jdbcType=VARCHAR},monitoring_events=null,broadcast_events=null,sending_broadcast_events=null
+             </if>
+         </set>
+         where id = #{data.id,jdbcType=VARCHAR}
+    </update>
+    <!--修改实时任务-->
+    <update id="updateTrealTimeTask">
+        update VzDataQuality.dbo.tb_collectiontimingdata
+        <set>
+            <if test="data.task_id != null">
+                task_id = #{data.task_id,jdbcType=VARCHAR},
+            </if>
+            <if test="data.company_id2 != null">
+                company_id = #{data.company_id2,jdbcType=VARCHAR},
+            </if>
+            <if test="data.status2 != null">
+                status = #{data.status2,jdbcType=VARCHAR},
+            </if>
+            <if test="data.tran_id2 != null">
+                tran_id = #{data.tran_id2,jdbcType=VARCHAR},
+            </if>
+            <if test="data.remark2 != null">
+                remark = #{data.remark2,jdbcType=VARCHAR},
+            </if>
+            <if test="data.update_time != null">
+                update_time = #{data.update_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="data.prohibit_time != null">
+                prohibit_time = #{data.prohibit_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="data.work_untis_name2 != null">
+                work_untis_name = #{data.work_untis_name2,jdbcType=VARCHAR},
+            </if>
+            <if test="data.work_untis_code2 != null">
+                work_untis_code = #{data.work_untis_code2,jdbcType=VARCHAR},
+            </if>
+            <if test="data.type != null">
+                type = #{data.type,jdbcType=VARCHAR},time_stamp=null,cron=null,
+            </if>
+                monitoring_events = #{data.monitoring_events,jdbcType=VARCHAR},
+                broadcast_events = #{data.broadcast_events,jdbcType=VARCHAR},
+                sending_broadcast_events = #{data.sending_broadcast_events,jdbcType=VARCHAR},
+        </set>
+        where id = #{data.id,jdbcType=VARCHAR}
+    </update>
+    <!--逻辑删除任务-->
+    <update id="updateStatus">
+        update VzDataQuality.dbo.tb_collectiontimingdata set status=#{map.status} where id=#{map.id}
+    </update>
+    <!--查询任务列表-->
+    <select id="selectTaskList" resultType="java.util.Map">
+        select t1.*,
+        t3.ThirdPartyName as third_party_name,
+        t4.NAME as transformation_name
+        from VzDataQuality.dbo.tb_collectiontimingdata as t1 left join
+        VzDataQuality.dbo.tb_collectiontask as t2 on t1.task_id=t2.id left join
+        VzDataQuality.dbo.ThridParty as t3 on t1.company_id=t3.SysId left join
+        VzDataQuality.dbo.r_transformation as t4 on t1.tran_id=t4.ID_TRANSFORMATION
+        where t1.status!=2
+        <if test="map.task_id != null and map.task_id != ''">
+            and t1.task_id=#{map.task_id}
+        </if>
+        <if test="map.work_untis_name != null and map.work_untis_name != ''">
+            and t1.work_untis_name like concat('%',#{map.work_untis_name},'%')
+        </if>
+        <if test="map.type != null and map.type != ''">
+            and t1.type=#{map.type}
+        </if>
+    </select>
+    <!--根据事件类别查询事件列表-->
+    <select id="selectEventList" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.Event
+        <where>
+            <if test="map.type != null and map.type != ''">
+                EventTypeId=#{map.type}
+            </if>
+        </where>
+    </select>
+    <!--根据id查询任务的详细信息-->
+    <select id="selectTaskOnly" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.tb_collectiontimingdata where id=#{id}
+    </select>
+    <!--根據任務code查詢是否有任務(任務code不能重名)-->
+    <select id="selectTaskByWorkUntisCode" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.tb_collectiontimingdata where work_untis_code=#{map.work_untis_code}
+        <if test="map.old_name_code != null and map.old_name_code != ''">
+            and work_untis_code!=#{map.old_name_code}
+        </if>
+    </select>
+    <!--添加定时任务-->
+    <insert id="insertTimingTask">
+        insert into VzDataQuality.dbo.tb_collectiontimingdata
+        (id,company_id,time_stamp,status,tran_id,remark,create_time,cron,work_untis_name,work_untis_code,type)
+        values (#{data.id},#{data.company_id},#{data.time_stamp},#{data.status},#{data.tran_id},#{data.remark},
+        #{data.create_time},#{data.cron},#{data.work_untis_name},#{data.work_untis_code},#{data.type})
+    </insert>
+    <!--添加实时任务-->
+    <insert id="inserTrealTimeTask">
+        insert into VzDataQuality.dbo.tb_collectiontimingdata
+        (id,company_id,status,tran_id,remark,create_time,work_untis_name,work_untis_code,type,monitoring_events,broadcast_events,sending_broadcast_events)
+        values (#{data.id},#{data.company_id2},#{data.status2},#{data.tran_id2},#{data.remark2},
+        #{data.create_time},#{data.work_untis_name2},#{data.work_untis_code2},#{data.type},
+        #{data.monitoring_events},#{data.broadcast_events},#{data.sending_broadcast_events})
+    </insert>
+
+</mapper>

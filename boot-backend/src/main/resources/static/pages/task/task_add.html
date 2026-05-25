@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit"/><!-- 让360浏览器默认选择webkit内核 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=10;IE=9;IE=8;IE=7;IE=EDGE">
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../../../css/liu-class.css" rel="stylesheet"/>
+    <link href="../../../css/bootstrap.min14ed.css" rel="stylesheet"/>
+    <link href="../../../layui/css/modules/layer/default/layer.css" rel="stylesheet"/>
+    <link href="../../../layui/css/modules/laydate2/default/laydate.css" rel="stylesheet"/>
+    <link href="../../../css/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet"/>
+    <link href="../../../css/bootstrap-select2/css/select2.min.css" rel="stylesheet"/>
+    <!-- 全局js -->
+    <script type="text/javascript" src="../../../js/libs/jquery-2.1.1.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap.min.js?v=3.3.6"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/tableExport.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/xlsx.core.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-editable.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table-editable.js"></script>
+    <script src="../../../js/plugin/bootstrap-select2/select2.min.js"></script>
+    <script src="../../../js/plugin/validate/bootstrapValidator.min.js"></script>
+    <script src="../../../js/plugin/validate/zh_CN.js"></script>
+    <script type="text/javascript" src="../../../layui/css/modules/laydate2/laydate.js"></script>
+    <script type="text/javascript" src="../../../layui/lay/modules/layer.js"></script>
+    <script src="../../../js/common/ajax-object.js"></script>
+    <script src="../../../js/common/jquery.base64.js"></script>
+    <script src="../../../js/common/bootstrap-table-object.js"></script>
+    <script src="../../../js/plugin/bootstraptree/tree-table-object.js"></script>
+    <script src="../../../js/common/web-upload-object.js"></script>
+    <script src="../../../js/common/ztree-object.js"></script>
+    <script src="../../../js/common/image-upload.js"></script>
+    <script src="../../../js/common/Feng.js"></script>
+    <script src="../../../js/common/tool.js"></script>
+    <script src="../../../js/common/create.js"></script>
+    <script src="../../../js/plugin/bootstrap-suggest/bootstrap-suggest.js"></script>
+    <script src="../../../js/plugin/ztree/jquery.ztree.all.min.js"></script>
+</head>
+
+<body class="gray-bg" style="background-color: white;">
+<div class="wrapper animated fadeInRight">
+    <style>
+        .ui-jqgrid-bdiv {
+            overflow: auto !important
+        }
+
+        table tbody .ui-row-ltr td:nth-child(n+3):hover {
+            background-color: #a0f3f3;
+            cursor: pointer;
+        }
+
+        .xjf {
+            margin-right: 15px;
+
+            margin-left: 30px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .colStyle {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+    <div class="xjf ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="form-horizontal" id="taskForm">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-6">
+                        <div class="form-group" style="width: 100%">
+                            <label class="col-sm-4 control-label">任务类别</label>
+                            <div class="col-sm-7">
+                                <select class="form-control" id="type" name="type" dafa>
+                                    <option value="2" selected>定时</option>
+                                    <option value="1">实时</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row taskMag">
+                    <!--定时任务-->
+                    <div class="timing">
+                        <div class="col-sm-6 col-lg-6">
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">任务包代码</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" id="work_untis_code" name="work_untis_code">
+                                </div>
+                                <label class="text-danger control-label">*</label>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">时间戳字段</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" id="time_stamp" name="time_stamp">
+                                </div>
+                                <label class="text-danger control-label">*</label>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">厂商</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="company_id" name="company_id" dafa>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">状态</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="status" name="status" dafa>
+                                        <option value="1" selected="selected">启用</option>
+                                        <option value="0">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-6">
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">任务包名称</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" id="work_untis_name" name="work_untis_name">
+                                </div>
+                                <label class="text-danger control-label">*</label>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">执行频率</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="cron" name="cron" dafa>
+                                        <option value="[0 0 0 1/1 * ?]">每天凌晨执行一次</option>
+                                        <option value="[0 0 0/1 * * ? *]">1小时执行一次</option>
+                                        <option value="[0 0 0/12 * * ? *]">12小时执行一次</option>
+                                        <option value="[0 0 0/3 * * ? *]">3小时执行一次</option>
+                                        <option value="[0 0 0/6 * * ? *]">6小时执行一次</option>
+                                        <option value="[0 0/1 * * * ? *]">1分钟执行一次</option>
+                                        <option value="[0 0/10 * * * ? *]">10分钟执行一次</option>
+                                        <option value="[0 0/15 * * * ? *]">15分钟执行一次</option>
+                                        <option value="[0 0/30 * * * ? *]">30分钟执行一次</option>
+                                        <option value="[0 0/5 * * * ? *]">5分钟执行一次</option>
+                                        <option value="[0/30 * * * * ? *]">30秒执行一次</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">kettle包编号</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="tran_id" name="tran_id" dafa>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">备注</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control" id="remark" name="remark" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--实时任务-->
+                    <div class="realTime hide">
+                        <div class="col-sm-6 col-lg-6">
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">任务包代码</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" id="work_untis_code2" name="work_untis_code2">
+                                </div>
+                                <label class="text-danger control-label">*</label>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">厂商</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="company_id2" name="company_id2" style="width: 100%" dafa>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">状态</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="status2" name="status2" dafa>
+                                        <option value="1" selected="selected">启用</option>
+                                        <option value="0">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group monitoring_events" style="width: 100%">
+                                <label class="col-sm-4 control-label">监听事件</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="monitoring_events" name="monitoring_events" style="width: 100%" dafa>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group broadcast_events hide" style="width: 100%">
+                                <label class="col-sm-4 control-label">广播事件</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="broadcast_events" name="broadcast_events" style="width: 100%" dafa>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">备注</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control" id="remark2" name="remark2" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-info" style="background-color: #39aef5;" onclick="TaskAdd.addRow()">
+                                <i class="fa fa-plus"></i>&nbsp;新增行
+                            </button>
+                            <button type="button" class="btn btn-info" style="background-color: #39aef5;" onclick="TaskAdd.removeRow()">
+                                <i class="fa fa-plus"></i>&nbsp;删除行
+                            </button>
+                        </div>
+                        <div class="col-sm-6 col-lg-6">
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">任务包名称</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" id="work_untis_name2" name="work_untis_name2">
+                                </div>
+                                <label class="text-danger control-label">*</label>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">kettle包编号</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="tran_id2" name="tran_id2" style="width: 100%" dafa>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" style="width: 100%">
+                                <label class="col-sm-4 control-label">事件类型</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="event" name="event" dafa>
+                                        <option value="1" selected="selected">监听事件</option>
+                                        <option value="0">广播事件</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group sending_broadcast_events" style="width: 100%">
+                                <label class="col-sm-4 control-label">发送广播事件</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="sending_broadcast_events" name="sending_broadcast_events" style="width: 100%" dafa>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--参数表格-->
+                        <table id="paraTable">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/task/task_add.js"></script>
+</div>
+</body>
+</html>

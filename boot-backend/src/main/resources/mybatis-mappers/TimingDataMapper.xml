@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.TimingDataMapper">
+
+    <!--查询所有厂商下拉-->
+    <select id="selectThridParty" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.ThridParty where State=1
+    </select>
+    <!--查询所有任务包下拉-->
+    <select id="selectTransformation" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.r_transformation
+    </select>
+    <!--任务调配中间表以table_id查询该表对应的任务-->
+    <select id="selectTaskDepByTableId" resultType="java.util.Map">
+        select m1.id,m1.table_id,m1.work_id,m1.status,m1.create_time,m1.update_time,
+        m2.id id2,m2.hdr_name,m2.hdr_code,m2.pid,m2.status status2,m2.remark remark2,m2.type type2,
+        m2.serial_num,m2.is_test,m3.id id3,m3.task_id,m3.company_id,m3.time_stamp,m3.data_base,
+        m3.status status3,m3.tran_id,m3.remark remark3,m3.update_time update_time3,m3.create_time create_time3,
+        m3.prohibit_time prohibit_time3,m3.cron,m3.work_untis_name,m3.work_untis_code,m3.type type3,m3.monitoring_events,
+        m3.broadcast_events,m3.sending_broadcast_events,
+        m4.ThirdPartyName as third_party_name,m5.NAME as transformation_name
+        from VzDataQuality.dbo.tb_taskdeployment m1 left join
+        VzDataQuality.dbo.tb_collectiontask m2 on m1.table_id=m2.id
+        left join VzDataQuality.dbo.tb_collectiontimingdata m3 on m1.work_id=m3.id
+        left join VzDataQuality.dbo.ThridParty m4 on m3.company_id=m4.SysId
+        left join VzDataQuality.dbo.r_transformation m5 on m3.tran_id=m5.ID_TRANSFORMATION
+        where m1.status!=2 and m3.status!=2
+        <if test="map.table_id != null and map.table_id != ''">
+            and m1.table_id=#{map.table_id}
+        </if>
+        <if test="map.id != null and map.id != ''">
+            and m1.id=#{map.id}
+        </if>
+    </select>
+    <!--批量插入匹配的任务-->
+    <insert id="insertTaskDep" useGeneratedKeys="true" parameterType="java.util.List">
+        insert into VzDataQuality.dbo.tb_taskdeployment
+        (id,table_id,work_id,status,create_time,update_time)
+        values
+        <foreach collection="map" item="item" index="index" separator=",">
+            (#{item.id},#{item.table_id},#{item.work_id},#{item.status},#{item.create_time},#{item.update_time})
+        </foreach>
+    </insert>
+    <!--修改匹配的任务-->
+    <update id="updateTaskDep">
+        update VzDataQuality.dbo.tb_taskdeployment
+        <set>
+            <if test="map.table_id != null">
+                table_id = #{map.table_id,jdbcType=VARCHAR},
+            </if>
+            <if test="map.work_id != null">
+                work_id = #{map.work_id,jdbcType=VARCHAR},
+            </if>
+            <if test="map.status != null">
+                status = #{map.status,jdbcType=VARCHAR},
+            </if>
+            <if test="map.create_time != null">
+                create_time = #{map.create_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="map.update_time != null">
+                update_time = #{map.update_time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id=#{map.id,jdbcType=TIMESTAMP}
+    </update>
+</mapper>

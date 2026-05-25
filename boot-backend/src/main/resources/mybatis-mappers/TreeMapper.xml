@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.ktrtree.mapper.TreeMapper">
+    <resultMap id="BaseResultMap" type="com.zw.admin.server.ktrtree.entity.Tree">
+        <id column="id" jdbcType="NVARCHAR" property="id"/>
+        <result column="pid" jdbcType="NVARCHAR" property="pid"/>
+        <result column="nodeName" jdbcType="NVARCHAR" property="nodeName"/>
+        <result column="nodeCode" jdbcType="NVARCHAR" property="nodeCode"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="remark" jdbcType="NVARCHAR" property="remark"/>
+        <result column="treeType" jdbcType="NVARCHAR" property="treeType"/>
+        <result column="nodeType" jdbcType="NVARCHAR" property="nodeType"/>
+        <result column="serialNum" jdbcType="INTEGER" property="serialNum"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+       id, pid, nodeName, nodeCode, status, remark, treeType, nodeType, serialNum
+    </sql>
+
+    <insert id="insertNode" parameterType="com.zw.admin.server.ktrtree.entity.Tree">
+        insert into [VzDataQuality].[dbo].[tb_tree]
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="pid != null">
+                pid,
+            </if>
+            <if test="nodeName != null">
+                nodeName,
+            </if>
+            <if test="nodeCode != null">
+                nodeCode,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="treeType != null">
+                treeType,
+            </if>
+            <if test="nodeType != null">
+                nodeType,
+            </if>
+            <if test="serialNum != null">
+                serialNum,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=NVARCHAR},
+            </if>
+            <if test="pid != null">
+                #{pid,jdbcType=NVARCHAR},
+            </if>
+            <if test="nodeName != null">
+                #{nodeName,jdbcType=NVARCHAR},
+            </if>
+            <if test="nodeCode != null">
+                #{nodeCode,jdbcType=NVARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=NVARCHAR},
+            </if>
+            <if test="treeType != null">
+                #{treeType,jdbcType=NVARCHAR},
+            </if>
+            <if test="nodeType != null">
+                #{nodeType,jdbcType=NVARCHAR},
+            </if>
+            <if test="serialNum != null">
+                #{serialNum,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateNodeById" parameterType="com.zw.admin.server.ktrtree.entity.Tree">
+        update [VzDataQuality].[dbo].[tb_tree]
+        <set>
+            <if test="pid != null">
+                pid = #{pid,jdbcType=NVARCHAR},
+            </if>
+            <if test="nodeName != null">
+                nodeName = #{nodeName,jdbcType=NVARCHAR},
+            </if>
+            <if test="nodeCode != null">
+                nodeCode = #{nodeCode,jdbcType=NVARCHAR},
+            </if>
+            <!--<if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>-->
+            <if test="remark != null">
+                remark = #{remark,jdbcType=NVARCHAR},
+            </if>
+            <if test="treeType != null">
+                treeType = #{treeType,jdbcType=NVARCHAR},
+            </if>
+            <if test="nodeType != null">
+                nodeType = #{nodeType,jdbcType=NVARCHAR},
+            </if>
+            <if test="serialNum != null">
+                serialNum = #{serialNum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=NVARCHAR}
+    </update>
+
+    <select id="getNodeById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from [VzDataQuality].[dbo].[tb_tree]
+        where id = #{id,jdbcType=NVARCHAR} and status=1
+    </select>
+
+    <!--查询当前pid下的子集最大排序数 为下一个新增的排序做准备-->
+    <select id="getSerialNum" resultType="java.lang.Integer">
+        select case when max(serialNum) is null then 0 else max(serialNum) end as serialNum from [VzDataQuality].[dbo].[tb_tree]
+        where pid=#{pid} and treeType=#{treeType}
+    </select>
+    <!--同一个父节点下不能重名-->
+    <select id="getSameNameCount" resultType="java.lang.Integer">
+        select count(1) from [VzDataQuality].[dbo].[tb_tree] where status=1 and nodeName=#{nodeName} and pid=#{pid} and  treeType=#{treeType}
+    </select>
+
+    <update id="deleteById">
+        update [VzDataQuality].[dbo].[tb_tree] set status=0 where id=#{id};
+    </update>
+
+    <select id="loadTree" resultType="com.zw.admin.server.ktrtree.entity.Tree">
+        select
+        <include refid="Base_Column_List" />
+        from [VzDataQuality].[dbo].[tb_tree]
+        where status=1
+    </select>
+
+    <select id="loadChildren" resultType="com.zw.admin.server.ktrtree.entity.Tree">
+        select
+        <include refid="Base_Column_List" />
+        from [VzDataQuality].[dbo].[tb_tree]
+        where status=1 and pid=#{pid}
+    </select>
+
+
+</mapper>

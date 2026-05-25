@@ -1,0 +1,7 @@
+application.properties和application.yml两个文件是等价的，但是只能选一个来用，两个不要共存，
+如要用application.properties的话，
+请将application.yml删除，
+如要用application.yml的话，
+请将application.properties删除。
+
+之前遇到过用application.yml配置时，启动连接数据库报错，说Access denied for user，最后发现是yml格式文件里的空格导致的数据库连接失败，最后将application.yml删除，换成了application.properties，才解决问题

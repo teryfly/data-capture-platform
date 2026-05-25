@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit" />
+<!-- 让360浏览器默认选择webkit内核 -->
+<meta http-equiv="X-UA-Compatible" content="IE=10;IE=9;IE=8;IE=7;IE=EDGE">
+<link href="../../../css/bootstrap.min.css" rel="stylesheet">
+<link href="../../../css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<link href="../../../css/bootstrap.min14ed.css" rel="stylesheet" />
+<link href="../../../layui/css/modules/layer/default/layer.css" rel="stylesheet" />
+<link href="../../../layui/css/modules/laydate2/default/laydate.css" rel="stylesheet" />
+<!-- 全局js -->
+<script type="text/javascript" src="../../../js/libs/jquery-2.1.1.min.js"></script>
+<script src="../../../js/bootstrap/bootstrap.min.js?v=3.3.6"></script>
+<script type="text/javascript" src="../../../layui/css/modules/laydate2/laydate.js"></script>
+<script type="text/javascript" src="../../../layui/lay/modules/layer.js"></script>
+<script src="../../../js/common/ajax-object.js"></script>
+<script src="../../../js/common/jquery.base64.js"></script>
+<script src="../../../js/echarts/echarts.min.js"></script>
+</head>
+<body class="gray-bg" style="background-color: white;overflow: hidden;">
+	<div class="row" style="border: 0px red solid;width: 98%;margin-left: 10px;">
+		<div class="col-sm-12" style="padding-left: 20px;height: 80px;padding-top: 20px;">
+			<div class="col-sm-2">
+	            <div class="form-group">
+	                <label class="col-md-4 control-label">统计模式</label>
+	                <div class="col-md-8" style="width: 100px">
+	                    <select class="form-control input-sm" name="interest" id="interest">
+								<option>本年</option>
+								<option>明年</option>
+	                    </select>
+	                </div>
+	            </div>
+            </div>
+			<div class="col-sm-6">
+				<button type="button" class="btn btn-info" style="background-color: #39aef5;" onclick="QualityTable.check()" >
+					<i class="fa fa-search"></i>&nbsp;统计
+				</button>
+			</div>
+	    </div>
+	</div>
+	<div class="row" id="main" style="border: 0px red solid;width: 98%;height: 600px;margin-left: 10px;">
+	    <script type="text/javascript">
+	        // 基于准备好的dom，初始化echarts实例
+	        var myChart = echarts.init(document.getElementById('main'));
+	        // 指定图表的配置项和数据
+let arr1 = [1000000, 30000, 60000, 15000, 19000, 21200, 18500, 17800, 23900, 17000, 24000, 25000];
+let arr2 = [1123180.15, 35555.2, 13477.87, 14896.4, 28632.82, 21477.91, 24249.66, 17820.1, 6800];
+
+let budget = [0];
+let realIncome = [0];
+
+for (let i = 0; i < 12; i++) {
+    let tmp = arr1[i] || NaN;
+    tmp = parseFloat((tmp / 10000).toFixed(1));
+    budget.push(tmp + budget[i]);
+}
+for (let i = 0; i < 12; i++) {
+    let tmp = arr2[i] || NaN;
+    tmp = parseFloat((tmp / 10000).toFixed(1));
+    realIncome.push(tmp + realIncome[i]);
+}
+budget = budget.slice(1);
+realIncome = realIncome.slice(1);
+console.log(budget)
+console.log(realIncome)
+option = {
+    title: {
+        text: '全院预测收入与实际收入'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data: ['预测收入(万)', '实际收入(万)']
+    },
+    toolbox: {
+        show: true,
+        feature: {
+            dataView: {
+                show: true,
+                readOnly: false
+            },
+            magicType: {
+                show: true,
+                type: ['line', 'bar']
+            },
+            restore: {
+                show: true
+            },
+            saveAsImage: {
+                show: true
+            }
+        }
+    },
+    calculable: true,
+    xAxis: [{
+        type: 'category',
+        splitLine: {
+            show: false
+        },
+        data: function() {
+            var list = [];
+            for (var i = 1; i <= 12; i++) {
+                list.push(i + '月');
+            }
+            return list;
+        }()
+    }],
+    yAxis: [{
+        type: 'value'
+    }],
+    series: [{
+            name: '预测收入(万)',
+            type: 'line',
+            data: budget
+        },
+        {
+            name: '实际收入(万)',
+            type: 'line',
+            data: realIncome
+        }
+    ]
+};
+	        // 使用刚指定的配置项和数据显示图表。
+	        myChart.setOption(option);
+	        // 相当于 document.ready，{代码}
+	        $(function(){
+	        })
+	    </script>
+</body>
+</html>
+<script src="../../../js/statistics/qualityStatistics.js"></script>

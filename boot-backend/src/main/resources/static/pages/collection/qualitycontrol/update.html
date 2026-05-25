@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="renderer" content="webkit" />
+<!-- 让360浏览器默认选择webkit内核 -->
+<meta http-equiv="X-UA-Compatible"
+	content="IE=10;IE=9;IE=8;IE=7;IE=EDGE">
+<link href="../../../css/bootstrap.min.css" rel="stylesheet">
+<link href="../../../css/bootstrap-table/bootstrap-table.min.css"
+	rel="stylesheet">
+<link href="../../../css/liu-class.css" rel="stylesheet" />
+<link href="../../../css/bootstrap.min14ed.css" rel="stylesheet" />
+<link href="../../../layui/css/modules/layer/default/layer.css"
+	rel="stylesheet" />
+<link href="../../../layui/css/modules/laydate2/default/laydate.css"
+	rel="stylesheet" />
+<link href="../../../css/ztree/zTreeStyle/zTreeStyle.css"
+	rel="stylesheet" />
+<!-- 全局js -->
+<script type="text/javascript"
+	src="../../../js/libs/jquery-2.1.1.min.js"></script>
+<script src="../../../js/bootstrap/bootstrap.min.js?v=3.3.6"></script>
+<script src="../../../js/plugin/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="../../../js/plugin/bootstrap-table/tableExport.min.js"></script>
+<script src="../../../js/plugin/bootstrap-table/xlsx.core.min.js"></script>
+<script
+	src="../../../js/plugin/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script
+	src="../../../js/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../js/plugin/bootstrap-table/bootstrap-editable.js"></script>
+<script
+	src="../../../js/plugin/bootstrap-table/bootstrap-table-editable.js"></script>
+
+<script src="../../../js/plugin/validate/bootstrapValidator.min.js"></script>
+<script src="../../../js/plugin/validate/zh_CN.js"></script>
+
+<script type="text/javascript"
+	src="../../../layui/css/modules/laydate2/laydate.js"></script>
+<script type="text/javascript" src="../../../layui/lay/modules/layer.js"></script>
+
+<script src="../../../js/common/ajax-object.js"></script>
+<script src="../../../js/common/jquery.base64.js"></script>
+<script src="../../../js/common/bootstrap-table-object.js"></script>
+<script src="../../../js/plugin/bootstraptree/tree-table-object.js"></script>
+<script src="../../../js/common/web-upload-object.js"></script>
+<script src="../../../js/common/ztree-object.js"></script>
+<script src="../../../js/common/image-upload.js"></script>
+<script src="../../../js/common/Feng.js"></script>
+<script src="../../../js/common/tool.js"></script>
+<script src="../../../js/common/create.js"></script>
+
+<script src="../../../js/plugin/bootstrap-suggest/bootstrap-suggest.js"></script>
+
+<script src="../../../js/plugin/ztree/jquery.ztree.all.min.js"></script>
+
+</head>
+
+<body class="gray-bg" style="background-color: white;">
+	<div class="wrapper animated fadeInRight">
+		<style>
+.ui-jqgrid-bdiv {
+	overflow: auto !important
+}
+
+table tbody .ui-row-ltr td:nth-child(n+3):hover {
+	background-color: #a0f3f3;
+	cursor: pointer;
+}
+
+.xjf {
+	margin-right: 15px;
+	margin-left: 30px;
+}
+</style>
+		<div class="xjf ibox float-e-margins">
+			<div class="ibox-content">
+				<div class="form-horizontal" id="menuInfoForm">
+					<input type="hidden" id="id" value="">
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">挂号记录ID</label>       <div class="col-sm-9">        <input class="form-control" id="GHJLID" name="GHJLID">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">就诊日期</label>       <div class="col-sm-9">        <input class="form-control" id="JZLSH" name="JZLSH">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">手机号</label>       <div class="col-sm-9">        <input class="form-control" id="GRBSH" name="GRBSH">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">个人标识类型</label>       <div class="col-sm-9">        <input class="form-control" id="GRBSLX" name="GRBSLX">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">收/退费编号</label>       <div class="col-sm-9">        <input class="form-control" id="STFBH" name="STFBH">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">退号标志</label>       <div class="col-sm-9">        <input class="form-control" id="GTHBZ" name="GTHBZ">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">挂/退号时间</label>       <div class="col-sm-9">        <input class="form-control" id="GTHSJ" name="GTHSJ">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">挂号类别</label>       <div class="col-sm-9">        <input class="form-control" id="GHLB" name="GHLB">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">是否急诊</label>       <div class="col-sm-9">        <input class="form-control" id="SFJZ" name="SFJZ">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">就诊性质</label>       <div class="col-sm-9">        <input class="form-control" id="JZXZ" name="JZXZ">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">挂号途径代码</label>       <div class="col-sm-9">        <input class="form-control" id="GHTJBM" name="GHTJBM">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">保险类型（患者属性）</label>       <div class="col-sm-9">        <input class="form-control" id="BXLX" name="BXLX">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">科室编码</label>       <div class="col-sm-9">        <input class="form-control" id="KSBM" name="KSBM">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">科室名称</label>       <div class="col-sm-9">        <input class="form-control" id="KSMC" name="KSMC">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">临床医学类型代码</label>       <div class="col-sm-9">        <input class="form-control" id="LCYXLXDM" name="LCYXLXDM">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">挂号医生编号</label>       <div class="col-sm-9">        <input class="form-control" id="GHYSBH" name="GHYSBH">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">挂号医生姓名</label>       <div class="col-sm-9">        <input class="form-control" id="GHYSXM" name="GHYSXM">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">挂号总费用</label>       <div class="col-sm-9">        <input class="form-control" id="GHZFY" name="GHZFY">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">患者唯一标识号</label>       <div class="col-sm-9">        <input class="form-control" id="p_user_id" name="p_user_id">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">序列号</label>       <div class="col-sm-9">        <input class="form-control" id="serial_no" name="serial_no">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">特需标志</label>       <div class="col-sm-9">        <input class="form-control" id="TXBZ" name="TXBZ">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">就诊者唯一标识号</label>       <div class="col-sm-9">        <input class="form-control" id="visit_user_id" name="visit_user_id">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">外地标志</label>       <div class="col-sm-9">        <input class="form-control" id="WDBZ" name="WDBZ">       </div>      </div>     </div>    </div>
+<div class="row">     <div class="col-sm-11">      <div class="form-group">       <label class="col-sm-3 control-label">修改标志</label>       <div class="col-sm-9">        <input class="form-control" id="XGBZ" name="XGBZ">       </div>      </div>     </div>    </div>
+				</div>
+			</div>
+			<script src="../../../js/qualitycontrol/update.js"></script>
+		</div>
+</body>
+</html>

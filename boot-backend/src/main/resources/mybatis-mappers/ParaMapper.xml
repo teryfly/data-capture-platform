@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.ParaMapper">
+    <!--批量插入参数-->
+    <insert id="insertPara" useGeneratedKeys="true" parameterType="java.util.List">
+        insert into VzDataQuality.dbo.work_units_para
+        (id,work_units_id,para_code,para_name,para_type,para_var,remark)
+        values
+        <foreach collection="map" item="item" index="index" separator=",">
+            (#{item.id},#{item.work_units_id},#{item.para_code},#{item.para_name},#{item.para_type},#{item.para_var},#{item.remark})
+        </foreach>
+    </insert>
+    <!--插入单个参数-->
+    <insert id="insertParaOnly">
+        insert into VzDataQuality.dbo.work_units_para
+        (id,work_units_id,para_code,para_name,para_type,para_var,remark)
+        values (#{map.id},#{map.work_units_id},#{map.para_code},#{map.para_name},#{map.para_type},#{map.para_var},#{map.remark})
+    </insert>
+    <!--修改单个参数-->
+    <update id="updateParaOnly">
+        update VzDataQuality.dbo.work_units_para
+        <set>
+            <if test="map.work_units_id != null">
+                work_units_id = #{map.work_units_id,jdbcType=VARCHAR},
+            </if>
+            <if test="map.para_code != null">
+                para_code = #{map.para_code,jdbcType=VARCHAR},
+            </if>
+            <if test="map.para_name != null">
+                para_name = #{map.para_name,jdbcType=VARCHAR},
+            </if>
+            <if test="map.para_type != null">
+                para_type = #{map.para_type,jdbcType=VARCHAR},
+            </if>
+            <if test="map.para_var != null">
+                para_var = #{map.para_var,jdbcType=VARCHAR},
+            </if>
+            <if test="map.remark != null">
+                remark = #{map.remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{map.id,jdbcType=VARCHAR}
+    </update>
+    <!--删除参数-->
+    <delete id="delPara">
+        delete from VzDataQuality.dbo.work_units_para where id=#{map.id}
+    </delete>
+    <!--根据任务编号删除对应的参数-->
+    <delete id="delParaByWorkId">
+        delete from VzDataQuality.dbo.work_units_para where work_units_id=#{map.work_units_id}
+    </delete>
+    <!--查询参数列表-->
+    <select id="selectParaList" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.work_units_para
+        <where>
+            <if test="map.work_units_id != null and map.work_units_id != ''">
+                work_units_id=#{map.work_units_id}
+            </if>
+        </where>
+    </select>
+</mapper>

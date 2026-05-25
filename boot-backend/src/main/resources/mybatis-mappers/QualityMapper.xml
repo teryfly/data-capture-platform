@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.QualityMapper">
+    <select id="selectTaskData" resultType="java.util.Map">
+        select top 100 * from ${database_name}.guest.${table_name}
+        where ${time_stamp}
+        between #{beginTime} and #{endTime}
+        order by ${time_stamp}
+    </select>
+	<select id="selectTaskData2" resultType="java.util.Map">
+        select 
+		[YLJGDM]
+      ,[GHJLID]
+      ,[JZLSH]
+      ,[GRBSLX]
+      ,CASE WHEN GRBSH=GRBSH_LS THEN GRBSH ELSE '&lt;div style="color:red;" title="与源数据不一致,源数据为:'+GRBSH_LS+'"&gt;'+GRBSH+'&lt;/div&gt;' END GRBSH   
+      ,CASE WHEN GTHBZ=GTHBZ_LS THEN GTHBZ ELSE '&lt;div style="color:red;" title="与源数据不一致,源数据为:'+GTHBZ_LS+'"&gt;'+GTHBZ+'&lt;/div&gt;' END GTHBZ
+      ,[STFBH]
+      ,[GTHSJ]
+      ,[GHLB]
+      ,[SFJZ]
+      ,[JZXZ]
+      ,[GHTJBM]
+      ,[BXLX]
+      ,[KSBM]
+      ,[KSMC]
+      ,[LCYXLXDM]
+      ,[GHYSBH]
+      ,[GHYSXM]
+      ,[TXBZ]
+      ,[WDBZ]
+      ,[GHZFY]
+      ,[XGBZ]
+      ,[VZ_XM]
+      ,[VZ_XB]
+      ,[VZ_CSRQ]
+      ,[VZ_GHCZYDM]
+      ,[VZ_GHCZYXM]
+		from VzDataQuality.dbo.TB_MZ_GHMXB
+    </select>
+    <select id="selectDataByKey" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT TOP 1 * FROM MZXX..TB_MZ_GHMXB where ghjlid=#{key}
+    </select>
+</mapper>

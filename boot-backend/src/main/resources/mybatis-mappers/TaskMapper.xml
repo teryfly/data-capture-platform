@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.TaskMapper">
+  <resultMap id="BaseResultMap" type="com.zw.admin.server.model.Task">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="hdr_name" jdbcType="VARCHAR" property="hdr_name" />
+    <result column="hdr_code" jdbcType="VARCHAR" property="hdr_code" />
+    <result column="pid" jdbcType="VARCHAR" property="pid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="serial_num" jdbcType="INTEGER" property="serial_num" />
+    <result column="is_test" jdbcType="VARCHAR" property="is_test" />
+  </resultMap>
+
+
+  <resultMap id="TransformationMap" type="com.zw.admin.server.model.Transformation">
+    <id column="ID_TRANSFORMATION" jdbcType="BIGINT" property="ID_TRANSFORMATION" />
+    <result column="ID_DIRECTORY" jdbcType="INTEGER" property="ID_DIRECTORY" />
+    <result column="NAME" jdbcType="VARCHAR" property="NAME" />
+    <result column="TRANS_VERSION" jdbcType="VARCHAR" property="TRANS_VERSION" />
+    <result column="TRANS_STATUS" jdbcType="INTEGER" property="TRANS_STATUS" />
+    <result column="ID_STEP_READ" jdbcType="INTEGER" property="ID_STEP_READ" />
+    <result column="ID_STEP_WRITE" jdbcType="INTEGER" property="ID_STEP_WRITE" />
+    <result column="ID_STEP_INPUT" jdbcType="INTEGER" property="ID_STEP_INPUT" />
+    <result column="ID_STEP_OUTPUT" jdbcType="INTEGER" property="ID_STEP_OUTPUT" />
+    <result column="ID_STEP_UPDATE" jdbcType="INTEGER" property="ID_STEP_UPDATE" />
+    <result column="ID_DATABASE_LOG" jdbcType="INTEGER" property="ID_DATABASE_LOG" />
+    <result column="TABLE_NAME_LOG" jdbcType="VARCHAR" property="TABLE_NAME_LOG" />
+    <result column="USE_BATCHID" jdbcType="BIT" property="USE_BATCHID" />
+    <result column="USE_LOGFIELD" jdbcType="BIT" property="USE_LOGFIELD" />
+    <result column="ID_DATABASE_MAXDATE" jdbcType="INTEGER" property="ID_DATABASE_MAXDATE" />
+    <result column="TABLE_NAME_MAXDATE" jdbcType="VARCHAR" property="TABLE_NAME_MAXDATE" />
+    <result column="FIELD_NAME_MAXDATE" jdbcType="VARCHAR" property="FIELD_NAME_MAXDATE" />
+    <result column="OFFSET_MAXDATE" jdbcType="DOUBLE" property="OFFSET_MAXDATE" />
+    <result column="DIFF_MAXDATE" jdbcType="DOUBLE" property="DIFF_MAXDATE" />
+    <result column="CREATED_USER" jdbcType="VARCHAR" property="CREATED_USER" />
+    <result column="CREATED_DATE" jdbcType="TIMESTAMP" property="CREATED_DATE" />
+    <result column="MODIFIED_USER" jdbcType="VARCHAR" property="MODIFIED_USER" />
+    <result column="MODIFIED_DATE" jdbcType="TIMESTAMP" property="MODIFIED_DATE" />
+    <result column="SIZE_ROWSET" jdbcType="INTEGER" property="SIZE_ROWSET" />
+    <result column="DESCRIPTION" jdbcType="LONGVARCHAR" property="DESCRIPTION" />
+    <result column="EXTENDED_DESCRIPTION" jdbcType="LONGVARCHAR" property="EXTENDED_DESCRIPTION" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, hdr_name, hdr_code, pid, status, remark, type, serial_num, is_test
+  </sql>
+
+  <select id="selectTaskMenu" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from VzDataQuality.dbo.tb_collectiontask
+    where table_name = '' ORDER BY cid ASC
+  </select>
+
+  <select id="selectTaskChildren" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from VzDataQuality.dbo.tb_collectiontask
+    where table_name != ''
+    and (status != '2'
+    or status is null
+    or status = '')
+    ORDER BY cid ASC
+  </select>
+  <!--通过id查询task的数据-->
+  <select id="selectTaskById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from VzDataQuality.dbo.tb_collectiontask
+    where id=#{id}
+  </select>
+
+  <update id="updateTaskById" parameterType="com.zw.admin.server.model.Task">
+    update VzDataQuality.dbo.tb_collectiontask
+    <set>
+      <if test="hdr_name != null">
+          hdr_name = #{hdr_name,jdbcType=VARCHAR},
+      </if>
+      <if test="hdr_code != null">
+          hdr_code = #{hdr_code,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null">
+          pid = #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+          status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+          remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+          type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="serial_num != null">
+          serial_num = #{serial_num,jdbcType=INTEGER},
+      </if>
+      <if test="is_test != null">
+          is_test = #{is_test,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="deleteByIdPretend">
+    update VzDataQuality.dbo.tb_collectiontask
+    set status='2'
+    where id=#{unique_id}
+  </update>
+
+  <update id="updateBatchTask" parameterType="java.util.List">
+    update VzDataQuality.dbo.tb_collectiontask
+    <trim prefix="set" suffixOverrides=",">
+     <trim prefix="status =case" suffix="end,">
+      <foreach collection="list" item="item" index="index">
+           when id=#{item.id} then 2
+      </foreach>
+     </trim>
+    </trim>
+    where id in
+      <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+          #{item.id}
+      </foreach>
+  </update>
+
+  <insert id="insertTask" parameterType="com.zw.admin.server.model.Task">
+    insert into VzDataQuality.dbo.tb_collectiontask
+    values (#{id},#{hdr_name},#{hdr_code},#{pid},#{status},#{remark},
+            #{type},#{serial_num},#{is_test});
+  </insert>
+
+  <select id="selectTransList" resultMap="TransformationMap">
+    select ID_TRANSFORMATION,NAME
+    from VzDataQuality.dbo.r_transformation
+  </select>
+
+    <select id="selectNameByTranId" resultType="java.lang.String">
+        select name
+        from r_transformation
+        where ID_TRANSFORMATION=#{tran_id}
+    </select>
+
+    <select id="selectTreeTask" resultMap="BaseResultMap">
+        select * from VzDataQuality.dbo.tb_collectiontask where status != 2
+        <if test="map.name != null and map.name != ''">
+            and (hdr_name like concat('%',#{map.name},'%') or hdr_code like concat('%',#{map.name},'%'))
+        </if>
+    </select>
+
+    <select id="selectChildTask" resultMap="BaseResultMap">
+        select * from VzDataQuality.dbo.tb_collectiontask where pid=#{id}
+    </select>
+
+    <select id="selectTaskByNameAndPid" resultType="com.zw.admin.server.model.Task">
+        select * from (select * from VzDataQuality.dbo.tb_collectiontask
+        where status != 2
+        <if test="map.old_name != null and map.old_name != ''">
+            and hdr_code != #{map.old_name}
+        </if>
+        ) as m
+        <where>
+            <if test="map.pid != null and map.pid != ''">
+                m.pid = #{map.pid}
+            </if>
+            <if test="map.hdr_code != null and map.hdr_code != ''">
+                and m.hdr_code = #{map.hdr_code}
+            </if>
+        </where>
+    </select>
+    <!--查询父级数据库的名称-->
+    <select id="selectDataBase" resultType="java.util.Map">
+        select t2.hdr_name from VzDataQuality.dbo.tb_collectiontask t1 left join
+        VzDataQuality.dbo.tb_collectiontask t2 on t1.pid=t2.id
+        where t1.id=#{id}
+    </select>
+    <!--查询当前pid下的子集最大排序数 为下一个新增的排序做准备-->
+    <select id="selectSerialNum" resultType="java.lang.Integer">
+        select case when max(serial_num) is null then 0 else max(serial_num) end as serial_num from VzDataQuality.dbo.tb_collectiontask where pid=#{pid}
+    </select>
+    <!--查询该节点可以选择的父级节点-->
+    <select id="selectTaskPidList" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.tb_collectiontask
+        <where>
+            <if test="map.type != null and map.type != ''">
+                type=#{map.type}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit"/><!-- 让360浏览器默认选择webkit内核 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=10;IE=9;IE=8;IE=7;IE=EDGE">
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../../../css/liu-class.css" rel="stylesheet"/>
+    <link href="../../../css/bootstrap.min14ed.css" rel="stylesheet"/>
+    <link href="../../../layui/css/modules/layer/default/layer.css" rel="stylesheet"/>
+    <link href="../../../layui/css/modules/laydate2/theme/default/laydate.css" rel="stylesheet"/>
+    <link href="../../../css/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet"/>
+    <link href="../../../css/bootstrap-select2/css/select2.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="../../../layui/css/layui.css">
+
+    <!--codemirror 编辑器插件引入-->
+    <link rel="stylesheet" href="../../../plugin/codemirror-5.55.0/lib/codemirror.css"/>
+    <script src="../../../plugin/codemirror-5.55.0/lib/codemirror.js"></script>
+    <!--引入css文件，用以支持主题-->
+    <link rel="stylesheet" href="../../../plugin/codemirror-5.55.0/theme/dracula.css"/>
+    <link rel="stylesheet" href="../../../plugin/codemirror-5.55.0/theme/eclipse.css"/>
+    <link rel="stylesheet" href="../../../plugin/codemirror-5.55.0/theme/ayu-mirage.css"/>
+    <!--支持代码折叠-->
+    <link rel="stylesheet" href="../../../plugin/codemirror-5.55.0/addon/fold/foldgutter.css"/>
+    <script src="../../../plugin/codemirror-5.55.0/mode/xml/xml.js"></script>
+    <script src="../../../plugin/codemirror-5.55.0/addon/fold/foldcode.js"></script>
+    <script src="../../../plugin/codemirror-5.55.0/addon/fold/foldgutter.js"></script>
+    <script src="../../../plugin/codemirror-5.55.0/addon/fold/brace-fold.js"></script>
+    <script src="../../../plugin/codemirror-5.55.0/addon/fold/comment-fold.js"></script>
+    <script src="../../../plugin/codemirror-5.55.0/addon/fold/markdown-fold.js"></script>
+    <!--引入xml文件-->
+    <script src="../../../plugin/codemirror-5.55.0/addon/fold/comment-fold.js"></script>
+
+    <!--下拉框多选-->
+<!--    <link rel="stylesheet" href="../../../layui/css/formSelects-v4.css">-->
+
+    <!-- 全局js -->
+    <script type="text/javascript" src="../../../js/libs/jquery-2.1.1.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap.min.js?v=3.3.6"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/tableExport.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/xlsx.core.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-editable.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table-editable.js"></script>
+    <script src="../../../js/plugin/bootstrap-select2/select2.min.js"></script>
+    <script src="../../../js/plugin/validate/bootstrapValidator.min.js"></script>
+    <script src="../../../js/plugin/validate/zh_CN.js"></script>
+
+    <script type="text/javascript" src="../../../layui/css/modules/laydate2/laydate.js"></script>
+    <script type="text/javascript" src="../../../layui/lay/modules/layer.js"></script>
+
+    <script src="../../../js/common/ajax-object.js"></script>
+    <script src="../../../js/common/jquery.base64.js"></script>
+    <script src="../../../js/common/bootstrap-table-object.js"></script>
+    <script src="../../../js/plugin/bootstraptree/tree-table-object.js"></script>
+    <script src="../../../js/common/web-upload-object.js"></script>
+    <script src="../../../js/common/ztree-object.js"></script>
+    <script src="../../../js/common/image-upload.js"></script>
+    <script src="../../../js/common/Feng.js"></script>
+    <script src="../../../js/common/tool.js"></script>
+    <script src="../../../js/common/create.js"></script>
+
+    <script src="../../../js/plugin/bootstrap-suggest/bootstrap-suggest.js"></script>
+
+    <script src="../../../js/plugin/ztree/jquery.ztree.all.min.js"></script>
+
+    <script type="text/javascript" src="../../../js/dict.js"></script>
+
+    <!--下拉框多选-->
+<!--    <script src="../../../layui/formSelects-v4.js"></script>-->
+<!--    <script src="../../../layui/layui.all.js"></script>-->
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../layui/xm-select.js"></script>
+    <style>
+        .layui-this{
+            color: #005DA6 !important;
+        }
+        .layui-this:after{
+            border-bottom:2px solid #005DA6 !important;
+        }
+        #multipleSelect>xm-select{
+            border-color:#005DA6 !important
+        }
+        .xm-option-icon, .xm-iconfont, .xm-icon-duox{
+            border-color:#005DA6 !important;
+            /*color: #005DA6 !important;*/
+        }
+        .xm-label-block{
+            background-color:#005DA6 !important ;
+        }
+
+        .CodeMirror,
+        .cm-s-abcdef,
+        .CodeMirror-wrap{
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body class="gray-bg" style="background-color: white;overflow: hidden;">
+<div class="wrapper animated fadeInRight">
+    <div class="liuClass" xmlns="http://www.w3.org/1999/html">
+        <div class="col-sm-12">
+            <div class="col-lg-3 col-sm-3">
+                <div class="panel panel-default">
+                    <div class="layui-tab admin-nav-card layui-tab-brief" lay-filter="tabSelect">
+                        <ul class="layui-tab-title" id="tab">
+                            <li class="layui-this">厂商</li>
+                            <li>医院</li>
+                        </ul>
+                        <div class="layui-tab-content" style="">
+                            <div class="panel-heading">
+                                <button type="button" class="btn btn-info input-sm" style="background-color: #005DA6;" onclick="TreeOperation.addTree()" id="addTree">
+                                    <i class="fa fa-plus"></i>&nbsp;新增
+                                </button>
+                                <button type="button" class="btn btn-info input-sm" style="background-color: #005DA6;" onclick="TreeOperation.updateTree()" id="updateTree">
+                                    <i class="fa fa-edit"></i>&nbsp;修改
+                                </button>
+                                <button type="button" class="btn btn-info input-sm" style="background-color: #005DA6;" onclick="TreeOperation.deleteTree()" id="deleteTree">
+                                    <i class="fa fa-remove"></i>&nbsp;删除
+                                </button>
+                            </div>
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <button data-toggle="dropdown" class="btn btn-white dropdown-toggle"
+                                                        type="button">节点名称或代码
+                                                </button>
+                                            </div>
+                                            <input type="text" class="form-control" id="name" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn btn-info btn-sm" style="background-color: #005DA6;" onclick="TreeOperation.treeSearch()">
+                                            <i class="fa fa-search"></i>&nbsp;搜索
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body dept-tree" style="height:603px;line-height:603px;overflow:auto;overflow-x:hidden;">
+                                <ul id="deptTree" class="ztree"></ul>
+                                <ul id="newTree" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div style="padding: 10px 0;width: 600px;display: flex;justify-content: space-between;align-items: center">
+                    <div >医院机构：</div>
+                    <div  id="multipleSelect"  style="width: 400px"></div>
+<!--                    <button class="btn btn-info btn-sm" style="background-color: rgb(0, 150, 136)">搜索</button>-->
+<!--                    <div style="clear: both"></div>-->
+                </div>
+                <div>
+                    <!--编辑器-->
+                    <!-- begin code -->
+                    <textarea class="form-control" id="code" name="code"></textarea>
+                    <!-- end code-->
+                    <button id="editText" class="btn btn-info btn-sm" style="margin:20px 0;background-color: #005DA6" onclick="getEditText()">提交</button>
+                </div>
+                <div>
+<!--                <ul id="myTab" class="nav nav-tabs">-->
+<!--                    <li class="active">-->
+<!--                        <a href="#home" data-toggle="tab">基本信息</a>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <a href="#ios" data-toggle="tab">任务匹配</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--                <div id="myTabContent" class="tab-content">-->
+<!--                    <div class="tab-pane fade in active" id="home">-->
+<!--                        <div class="row" style="margin-top: 15px;">-->
+<!--                            <form class="form-inline">-->
+<!--                                <div class="col-sm-1 col-lg-1">-->
+<!--                                    <button type="button" class="btn btn-info btn-sm" style="background-color: #39aef5;" onclick="MgrUser.addTab()" id="addTab">-->
+<!--                                        <i class="fa fa-plus"></i>&nbsp;新增字段-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-4 col-lg-3">-->
+<!--                                    <div class="form-group">-->
+<!--                                        HDR管理代码-->
+<!--                                        <input class="form-control input-sm" id="hdr_code" name="hdr_code" dafa disabled>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-2 col-lg-2">-->
+<!--                                    <div class="form-group">-->
+<!--                                        类别-->
+<!--                                        <select class="form-control input-sm" id="type" name="type" dafa disabled>-->
+<!--                                            <option value="1" selected="selected">类</option>-->
+<!--                                            <option value="2">库</option>-->
+<!--                                            <option value="3">表</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-2 col-lg-2">-->
+<!--                                    <div class="form-group">-->
+<!--                                        状态-->
+<!--                                        <select class="form-control input-sm" id="status" name="status" dafa disabled>-->
+<!--                                            <option value="1" selected="selected">启用</option>-->
+<!--                                            <option value="0">禁用</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-sm-2 col-lg-2">-->
+<!--                                    <div class="form-group">-->
+<!--                                        是否检验-->
+<!--                                        <select class="form-control input-sm" id="is_test" name="is_test" dafa disabled>-->
+<!--                                            <option value="1" selected="selected">是</option>-->
+<!--                                            <option value="0">否</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </form>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <table id="managerTable">-->
+
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="tab-pane fade" id="ios">-->
+<!--                        <div class="row" style="margin-top: 15px;">-->
+<!--                            <button type="button" class="btn btn-info btn-sm" style="background-color: #39aef5;" onclick="TimingData.addTab()" id="addTab">-->
+<!--                                <i class="fa fa-plus"></i>&nbsp;匹配任务-->
+<!--                            </button>-->
+<!--                            <button type="button" class="btn btn-info btn-sm" style="background-color: #39aef5;" onclick="TimingData.delTab()" id="delTab">-->
+<!--                                <i class="fa fa-plus"></i>&nbsp;批量删除-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                        <div class="row">-->
+<!--                            <table id="matchingTable">-->
+
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../../js/collection/task.js"></script>
+<script>
+
+</script>
+</body>
+</html>

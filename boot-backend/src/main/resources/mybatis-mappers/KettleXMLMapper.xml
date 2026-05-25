@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.ktrtree.mapper.KettleXMLMapper">
+    <resultMap id="BaseResultMap" type="com.zw.admin.server.ktrtree.entity.KettleXML">
+        <id column="id" jdbcType="NVARCHAR" property="id" />
+        <result column="treeId" jdbcType="NVARCHAR" property="treeId" />
+        <result column="remark" jdbcType="NVARCHAR" property="remark" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.zw.admin.server.ktrtree.entity.KettleXML">
+        <result column="xml" jdbcType="LONGVARCHAR" property="xml" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, treeId, remark, status
+  </sql>
+    <sql id="Blob_Column_List">
+    xml
+  </sql>
+
+    <!--<select id="getKettleXMLById" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from [VzDataQuality].[dbo].[tb_ktr_xml]
+        where id = #{id,jdbcType=NVARCHAR} and status=1
+    </select>-->
+    <select id="getContentByTreeId" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List" />
+        ,
+        <include refid="Blob_Column_List" />
+        from [VzDataQuality].[dbo].[tb_ktr_xml]
+        where treeId = #{treeId} and status=1
+    </select>
+
+    <!--treeId是否已经存在-->
+    <select id="getSameTreeIdCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1)
+        from [VzDataQuality].[dbo].[tb_ktr_xml]
+        where treeId = #{treeId} and status=1
+    </select>
+
+    <insert id="insertKettleXML" parameterType="com.zw.admin.server.ktrtree.entity.KettleXML">
+        insert into [VzDataQuality].[dbo].[tb_ktr_xml]
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="treeId != null">
+                treeId,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="xml != null">
+                xml,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=NVARCHAR},
+            </if>
+            <if test="treeId != null">
+                #{treeId,jdbcType=NVARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=NVARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="xml != null">
+                #{xml,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateKettleXML" parameterType="com.zw.admin.server.ktrtree.entity.KettleXML">
+        update [VzDataQuality].[dbo].[tb_ktr_xml]
+        <set>
+           <!-- <if test="treeId != null">
+                treeId = #{treeId,jdbcType=NVARCHAR},
+            </if>-->
+            <if test="remark != null">
+                remark = #{remark,jdbcType=NVARCHAR},
+            </if>
+            <!--<if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>-->
+            <if test="xml != null">
+                xml = #{xml,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where treeId = #{treeId,jdbcType=NVARCHAR}
+    </update>
+
+    <!--删除叶节点内容-->
+    <update id="deleteContentByTreeId">
+        update [VzDataQuality].[dbo].[tb_ktr_xml] set status=0 where treeId=#{treeId}
+    </update>
+
+</mapper>

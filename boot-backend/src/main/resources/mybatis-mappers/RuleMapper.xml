@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.RuleMapper">
+	<resultMap id="BaseResultMap" type="com.zw.admin.server.model.Rule">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="task_id" jdbcType="VARCHAR" property="task_id" />
+		<result column="column_name" jdbcType="VARCHAR" property="column_name" />
+		<result column="column_code" jdbcType="VARCHAR" property="column_code" />
+        <result column="is_null" jdbcType="VARCHAR" property="is_null" />
+		<result column="regular" jdbcType="VARCHAR" property="regular" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="is_pk" jdbcType="VARCHAR" property="is_pk" />
+        <result column="data_id" jdbcType="VARCHAR" property="data_id" />
+        <result column="data_name" jdbcType="VARCHAR" property="data_name" />
+        <result column="data_code" jdbcType="VARCHAR" property="data_code" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, task_id, column_name, column_code, is_null, regular, remark, is_pk,
+		data_id, data_name, data_code, status
+	</sql>
+	<insert id="insertRule" parameterType="com.zw.admin.server.model.Rule">
+		insert into VzDataQuality.dbo.tb_collectionrule (id, task_id, column_name, column_code,
+		is_null, regular, remark, is_pk,
+		data_id, data_name, data_code,
+		status
+		)
+		values (#{id,jdbcType=VARCHAR}, #{task_id,jdbcType=VARCHAR}, #{column_name,jdbcType=VARCHAR},
+		#{column_code,jdbcType=VARCHAR}, #{is_null,jdbcType=VARCHAR},
+		#{regular,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{is_pk,jdbcType=VARCHAR},
+		#{data_id,jdbcType=VARCHAR}, #{data_name,jdbcType=VARCHAR}, #{data_code,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR}
+		)
+	</insert>
+	<update id="updateRule">
+		update VzDataQuality.dbo.tb_collectionrule
+		<set>
+			<if test="rule.task_id != null">
+                task_id=#{rule.task_id,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.column_name != null">
+                column_name = #{rule.column_name,jdbcType=VARCHAR},
+			</if>
+            <if test="rule.column_code != null">
+                column_code = #{rule.column_code,jdbcType=VARCHAR},
+            </if>
+			<if test="rule.is_null != null">
+                is_null = #{rule.is_null,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.regular != null">
+                regular = #{rule.regular,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.remark != null">
+                remark = #{rule.remark,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.is_pk != null">
+                is_pk = #{rule.is_pk,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.data_id != null">
+                data_id = #{rule.data_id,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.data_name != null">
+                data_name = #{rule.data_name,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.data_code != null">
+                data_code = #{rule.data_code,jdbcType=VARCHAR},
+			</if>
+			<if test="rule.status != null">
+                status = #{rule.status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{rule.id,jdbcType=VARCHAR}
+	</update>
+	<select id="selectRules" resultType="java.util.Map">
+		select m1.id,m1.task_id,m1.column_name,m1.column_code,m1.is_null,m1.regular,m1.remark,m1.is_pk,
+        m1.data_id,m1.data_name,m1.data_code,m1.status,m2.Id id2,m2.Name name,m2.Identifier,m2.Version,
+        m2.RegistrationAuthority,m2.RelatedEnvironment,m2.BaseDictId,m2.CreateTime,m2.UpdateTime,m2.CreateUserId,
+        m2.UpdateUserId,m2.Sort,m2.Status status2,m2.DataElementClassifyId,m2.DataElementType,m2.Define,
+        m2.DataType,m2.DataLength,m2.DataFormat,m2.AllowDataValue,m2.Level level2
+		from VzDataQuality.dbo.tb_collectionrule m1
+        left join VzDataQuality.dbo.DataElements m2
+        on m1.data_id=m2.id
+		where m1.task_id=#{task_id}
+		<if test="name != null and name != ''">
+			and (m1.column_name like '%' + #{name} + '%' or m1.column_code like '%' + #{name} + '%')
+		</if>
+	</select>
+	<select id="selectByIdAndName" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from VzDataQuality.dbo.tb_collectionrule
+		where id=#{column_id}
+	</select>
+	<delete id="deleteRule" parameterType="java.lang.String">
+		delete from VzDataQuality.dbo.tb_collectionrule
+		where id=#{id}
+	</delete>
+    <delete id="deleteRuleByTaskId">
+        delete from VzDataQuality.dbo.tb_collectionrule
+		where task_id=#{task_id}
+    </delete>
+
+    <select id="selectListByTaskId" resultMap="BaseResultMap">
+		select *
+		from VzDataQuality.dbo.tb_collectionrule
+		where task_id=#{task_id}
+	</select>
+
+	<select id="getRegexById" resultType="map">
+		SELECT top 1 * FROM BIDESGIN.DBO.TB_RegexConfigure where code=#{code}
+	</select>
+	<select id="getRegexList" resultType="map">
+		SELECT * FROM BIDESGIN.DBO.TB_RegexConfigure
+	</select>
+
+    <select id="selectRuleByTaskIdAndFieldName" resultType="com.zw.admin.server.model.Rule">
+        select * from (select *
+		from VzDataQuality.dbo.tb_collectionrule
+		<where>
+            <if test="map.old_name != null and map.old_name != ''">
+                column_code!=#{map.old_name}
+            </if>
+        </where>
+		) as m where m.task_id=#{map.task_id} and m.column_code=#{map.column_code}
+    </select>
+    <!--查询数据元顶级分类-->
+    <select id="selectDataElementClassifies" resultType="java.util.Map">
+        select Id as id,Name as name,CreateTime,UpdateTime,CreateUserId,UpdateUserId,Sort,Status,Identifier,Level,pId='0' from
+        VzDataQuality.dbo.DataElementClassifies where Status=1
+        <if test="name != null and name != ''">
+            and name like CONCAT('%',#{name},'%')
+        </if>
+    </select>
+    <!--查询数据元下面所有的分类-->
+    <select id="selectDataElements" resultType="java.util.Map">
+        select Id as id,Name as
+        name,Identifier,Version,RegistrationAuthority,RelatedEnvironment,BaseDictId,CreateTime,UpdateTime,CreateUserId,UpdateUserId,Sort,Status,
+        DataElementClassifyId as pId,DataElementType,Define,DataType,DataLength,DataFormat,AllowDataValue,Level
+        from
+        VzDataQuality.dbo.DataElements where Status=1
+        <if test="name != null and name != ''">
+            and name like CONCAT('%',#{name},'%')
+        </if>
+    </select>
+    <!--查询单个数据元的详细信息-->
+    <select id="selectDataElementsOne" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.DataElements where Id=#{id}
+    </select>
+    <!--根据task_id和field_type=1查该表下的所有时间字段-->
+    <select id="selectTimeRule" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.tb_collectionrule m1
+        left join VzDataQuality.dbo.DataElements m2
+        on m1.data_id=m2.id where m2.DataType=#{map.field_type} and m1.task_id=#{map.task_id}
+    </select>
+</mapper>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit"/><!-- 让360浏览器默认选择webkit内核 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=10;IE=9;IE=8;IE=7;IE=EDGE">
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="../../../css/liu-class.css" rel="stylesheet"/>
+    <link href="../../../css/bootstrap.min14ed.css" rel="stylesheet"/>
+    <link href="../../../layui/css/modules/layer/default/layer.css" rel="stylesheet"/>
+    <link href="../../../layui/css/modules/laydate2/default/laydate.css" rel="stylesheet"/>
+    <link href="../../../css/ztree/zTreeStyle/zTreeStyle.css" rel="stylesheet"/>
+    <!-- 全局js -->
+    <script type="text/javascript" src="../../../js/libs/jquery-2.1.1.min.js"></script>
+    <script src="../../../js/bootstrap/bootstrap.min.js?v=3.3.6"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/tableExport.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/xlsx.core.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-editable.js"></script>
+    <script src="../../../js/plugin/bootstrap-table/bootstrap-table-editable.js"></script>
+
+    <script src="../../../js/plugin/validate/bootstrapValidator.min.js"></script>
+    <script src="../../../js/plugin/validate/zh_CN.js"></script>
+
+    <script type="text/javascript" src="../../../layui/css/modules/laydate2/laydate.js"></script>
+    <script type="text/javascript" src="../../../layui/lay/modules/layer.js"></script>
+
+    <script src="../../../js/common/ajax-object.js"></script>
+    <script src="../../../js/common/jquery.base64.js"></script>
+    <script src="../../../js/common/bootstrap-table-object.js"></script>
+    <script src="../../../js/plugin/bootstraptree/tree-table-object.js"></script>
+    <script src="../../../js/common/web-upload-object.js"></script>
+    <script src="../../../js/common/ztree-object.js"></script>
+    <script src="../../../js/common/image-upload.js"></script>
+    <script src="../../../js/common/Feng.js"></script>
+    <script src="../../../js/common/tool.js"></script>
+    <script src="../../../js/common/create.js"></script>
+
+    <script src="../../../js/plugin/bootstrap-suggest/bootstrap-suggest.js"></script>
+
+    <script src="../../../js/plugin/ztree/jquery.ztree.all.min.js"></script>
+
+    <script type="text/javascript" src="../../../js/dict.js"></script>
+</head>
+
+<body class="gray-bg" style="background-color: white;overflow: hidden;">
+<div class="wrapper animated fadeInRight">
+    <style>
+        .ui-jqgrid-bdiv {
+            overflow: auto !important
+        }
+
+        table tbody .ui-row-ltr td:nth-child(n+3):hover {
+            background-color: #a0f3f3;
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="liuClass" xmlns="http://www.w3.org/1999/html">
+        <div class="col-sm-12">
+            <div class="col-lg-3 col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        任务名称
+                    </div>
+                    <div class="panel-body dept-tree" style="height:603px;line-height:603px;overflow:auto;overflow-x:hidden;">
+                        <ul id="deptTree" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="row">
+                    <div class="col-sm-3 col-lg-2" style="margin: 5px 0">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button data-toggle="dropdown" class="btn btn-white dropdown-toggle"
+                                        type="button">时间
+                                </button>
+                            </div>
+                            <input type="text" class="form-control layer-date" id="time" name="time"/>
+                        </div>
+                    </div>
+                    <table id="managerTable">
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/inventory/inventory.js"></script>
+</div>
+</body>
+</html>

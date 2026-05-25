@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.CollectionlogMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.zw.admin.server.model.CollectionLog">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="task_id" jdbcType="VARCHAR" property="task_id" />
+		<result column="task_name" jdbcType="VARCHAR" property="task_name" />
+		<result column="tran_id" jdbcType="VARCHAR" property="tran_id" />
+		<result column="begin_time" jdbcType="TIMESTAMP" property="begin_time" />
+		<result column="end_time" jdbcType="TIMESTAMP" property="end_time" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="success" jdbcType="VARCHAR" property="success" />
+		<result column="excute_time" jdbcType="INTEGER" property="excute_time" />
+		<result column="condition" jdbcType="VARCHAR" property="condition" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, task_id, task_name, tran_id,
+		begin_time, end_time, status, success,
+		excute_time, condition, remark
+	</sql>
+	<select id="getCollectionlogs" resultMap="BaseResultMap">
+		select * from VzDataQuality.dbo.tb_collectionlog where 1 = 1
+		<if test="beginTime != null and beginTime !='' and endTime != null and endTime != ''">
+			and (end_time between CONCAT(#{beginTime},' 00:00:00') and
+			CONCAT(#{endTime},' 23:59:59'))
+		</if>
+		<if test="taskName != null and taskName !=''">
+			and task_name like CONCAT('%',#{taskName},'%')
+		</if>
+		<if test="logType != null and logType !=2">
+			and success =#{logType}
+		</if>
+		<choose>
+			<when test="orderByField != null and orderByField !=''">
+				<choose>
+					<when test="isAsc == true">
+						order by ${orderByField} ASC
+					</when>
+					<otherwise>
+						order by ${orderByField} DESC
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				order by id DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="statistics" resultType="java.util.Map">
+        select m3.*,m5.ThirdPartyName,m6.NAME tranName from
+        (select m1.task_id,
+        (case when m2.work_untis_name is null then '-' else m2.work_untis_name end) taskName,
+        sum(case m1.success when 1 then 1 else 0 end) success,
+        sum(case m1.success when 0 then 1 else 0 end) failed
+        from VzDataQuality.dbo.tb_collectionlog m1
+        left join
+        VzDataQuality.dbo.tb_collectiontimingdata m2
+        on m1.task_id=m2.id
+        where 1=1
+        <if test="beginTime != null and beginTime != ''">
+            and m1.begin_time &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and m1.begin_time &lt;= #{endTime}
+        </if>
+		<if test="taskName != null and taskName !=''">
+			and m2.work_untis_name like CONCAT('%',#{taskName},'%')
+		</if>
+        <if test="type != null and type != ''">
+            and m2.type=#{type}
+        </if>
+		<choose>
+			<!--<when test="orderByField != null and orderByField !=''">
+				<choose>
+					<when test="isAsc">
+						order by a.${orderByField} ASC
+					</when>
+					<otherwise>
+						order by a.${orderByField} DESC
+					</otherwise>
+				</choose>
+			</when>-->
+			<otherwise>
+                group by m1.task_id,m2.work_untis_name
+			</otherwise>
+		</choose>) m3
+        left join VzDataQuality.dbo.tb_collectiontimingdata m4
+        on m3.task_id=m4.id
+        left join VzDataQuality.dbo.ThridParty m5
+        on m4.company_id=m5.SysId
+        left join VzDataQuality.dbo.r_transformation m6
+        on m4.tran_id=m6.ID_TRANSFORMATION
+	</select>
+    <!--查询日志条数-->
+    <select id="selectCollectionlogsCount" resultType="java.lang.Integer">
+        select count(1) from VzDataQuality.dbo.tb_collectionlog m1 left join
+        VzDataQuality.dbo.r_transformation m2 on m1.tran_id=m2.ID_TRANSFORMATION left join
+        VzDataQuality.dbo.tb_collectiontimingdata m3 on m1.task_id=m3.id left join
+        VzDataQuality.dbo.ThridParty m4 on m3.company_id=m4.SysId left join
+        VzDataQuality.dbo.Event m5 on m3.monitoring_events=m5.EventId left join
+        VzDataQuality.dbo.Event m6 on m3.broadcast_events=m6.EventId left join
+        VzDataQuality.dbo.Event m7 on m3.sending_broadcast_events=m7.EventId
+        <include refid="where" />
+    </select>
+    <!--分页查询定时数据抽取-->
+    <select id="list" resultType="java.util.Map">
+        select m1.id,m1.task_id,m1.tran_id,m1.begin_time,m1.end_time,m1.status,m1.success,m1.excute_time,
+        m1.condition,m1.remark,m2.Name tran_name,m3.time_stamp,m3.cron,m3.work_untis_name,m3.work_untis_code,
+        m3.monitoring_events,m3.broadcast_events,m3.sending_broadcast_events,m4.ThirdPartyName third_party_name,
+        m5.EventCN monitoring_events_name,m6.EventCN broadcast_events_name,m7.EventCN sending_broadcast_events_name
+        from VzDataQuality.dbo.tb_collectionlog m1 left join
+        VzDataQuality.dbo.r_transformation m2 on m1.tran_id=m2.ID_TRANSFORMATION left join
+        VzDataQuality.dbo.tb_collectiontimingdata m3 on m1.task_id=m3.id left join
+        VzDataQuality.dbo.ThridParty m4 on m3.company_id=m4.SysId left join
+        VzDataQuality.dbo.Event m5 on m3.monitoring_events=m5.EventId left join
+        VzDataQuality.dbo.Event m6 on m3.broadcast_events=m6.EventId left join
+        VzDataQuality.dbo.Event m7 on m3.sending_broadcast_events=m7.EventId
+        <include refid="where" />
+        order by m1.end_time
+        offset #{offset} rows fetch next #{limit} rows only
+    </select>
+    <!--根据日志主键查询日志详情-->
+    <select id="one" resultType="java.util.Map">
+        select m1.id,m1.task_id,m1.tran_id,m1.begin_time,m1.end_time,m1.status,m1.success,m1.excute_time,
+        case when m1.condition is null then '成功无异常信息' else m1.condition end condition,
+        m1.remark,m2.Name tran_name,m3.time_stamp,m3.cron,m3.work_untis_name,m3.work_untis_code,
+        m3.monitoring_events,m3.broadcast_events,m3.sending_broadcast_events,m4.ThirdPartyName third_party_name,
+        m5.EventCN monitoring_events_name,m6.EventCN broadcast_events_name,m7.EventCN sending_broadcast_events_name
+        from VzDataQuality.dbo.tb_collectionlog m1 left join
+        VzDataQuality.dbo.r_transformation m2 on m1.tran_id=m2.ID_TRANSFORMATION left join
+        VzDataQuality.dbo.tb_collectiontimingdata m3 on m1.task_id=m3.id left join
+        VzDataQuality.dbo.ThridParty m4 on m3.company_id=m4.SysId left join
+        VzDataQuality.dbo.Event m5 on m3.monitoring_events=m5.EventId left join
+        VzDataQuality.dbo.Event m6 on m3.broadcast_events=m6.EventId left join
+        VzDataQuality.dbo.Event m7 on m3.sending_broadcast_events=m7.EventId
+        where m1.id=#{keyId}
+    </select>
+
+    <sql id="where">
+        <where>
+            <if test="params.keyId != null and params.keyId != ''">
+                and m1.id = #{params.keyId}
+            </if>
+            <if test="params.id != null and params.id != ''">
+                and m1.task_id = #{params.id}
+            </if>
+            <if test="params.name != null and params.name != ''">
+                and m3.work_untis_name like concat('%', #{params.name}, '%')
+            </if>
+            <if test="params.success != null and params.success != ''">
+                and m1.success = #{params.success}
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''">
+                and m1.begin_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                and m1.begin_time &lt;= #{params.endTime}
+            </if>
+            <if test="params.type != null and params.type != ''">
+                and m3.type = #{params.type}
+            </if>
+            <if test="params.company_name != null and params.company_name != ''">
+                and m4.ThirdPartyName like concat('%', #{params.company_name}, '%')
+            </if>
+            <if test="params.company_id != null and params.company_id != ''">
+                and m4.SysId = #{params.company_id}
+            </if>
+        </where>
+    </sql>
+</mapper>

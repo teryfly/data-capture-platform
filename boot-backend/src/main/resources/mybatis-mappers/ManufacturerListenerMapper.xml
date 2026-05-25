@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.ManufacturerListenerMapper">
+    <!--根据条件查询厂商列表-->
+    <select id="selectMftList" resultType="java.util.Map">
+        select * from VzDataQuality.dbo.ThridParty where State=1
+        <if test="map.name != null and map.name != ''">
+            and ThirdPartyName like concat('%', #{map.name}, '%')
+        </if>
+    </select>
+    <!--查询厂商一共执行多少任务包 成功次数 失败次数-->
+    <select id="selectMftCount" resultType="java.util.Map">
+        select
+        m6.sys_id,
+        m6.third_party_name,
+        m6.success,
+        m6.failed,
+        (
+        case
+        when m5.task_count is null then
+        0
+        else
+        m5.task_count
+        end
+        ) task_count
+        from
+        (
+        select
+        m1.sysid sys_id,
+        m1.thirdpartyname third_party_name,
+        sum (
+        case success
+        when 1 then
+        1
+        else
+        0
+        end
+        ) success,
+        sum (
+        case success
+        when 0 then
+        1
+        else
+        0
+        end
+        ) failed
+        from
+        vzdataquality.dbo.thridparty m1
+        left join vzdataquality.dbo.tb_collectiontimingdata m2 on m1.sysid = m2.company_id
+        left join vzdataquality.dbo.tb_collectionlog as m3 on m2.id = m3.task_id
+        <where>
+            <if test="map.name != null and map.name != ''">
+                m1.ThirdPartyName like CONCAT('%',#{map.name},'%')
+            </if>
+            <if test="map.beginTime != null and map.beginTime != ''">
+                and m3.begin_time &gt;= #{map.beginTime}
+            </if>
+            <if test="map.endTime != null and map.endTime != ''">
+                and m3.begin_time &lt;= #{map.endTime}
+            </if>
+            <if test="map.type != null and map.type != ''">
+                and m2.type=#{map.type}
+            </if>
+        </where>
+        group by
+        m1.sysid,
+        m1.thirdpartyname
+        ) as m6
+        left join (
+        select
+        count (id) task_count,
+        company_id
+        from
+        vzdataquality.dbo.tb_collectiontimingdata
+        <where>
+            <if test="map.type != null and map.type != ''">
+                and type=#{map.type}
+            </if>
+        </where>
+        group by
+        company_id
+        ) m5 on m5.company_id = m6.sys_id
+    </select>
+    <!--根据厂商 时间  任务类型查询统计任务包下的成功次数  失败次数-->
+    <select id="selectTaskCountByMft" resultType="java.util.Map">
+        select m3.*,m4.work_untis_code,m4.work_untis_name,m5.NAME tran_name from (
+        select m1.id,
+        count(m2.task_id) count,
+        sum(case m2.success when 1 then 1 else 0 end) success,
+        sum(case m2.success when 0 then 1 else 0 end) failed
+        from VzDataQuality.dbo.tb_collectiontimingdata m1 left join
+        VzDataQuality.dbo.tb_collectionlog m2 on m1.id=m2.task_id
+        <where>
+            <if test="map.company_id != null and map.company_id != ''">
+                m1.company_id like CONCAT('%',#{map.company_id},'%')
+            </if>
+            <if test="map.beginTime != null and map.beginTime != ''">
+                and m2.begin_time &gt;= #{map.beginTime}
+            </if>
+            <if test="map.endTime != null and map.endTime != ''">
+                and m2.begin_time &lt;= #{map.endTime}
+            </if>
+            <if test="map.type != null and map.type != ''">
+                and m1.type=#{map.type}
+            </if>
+        </where>
+        group by m1.id) m3 left join
+        VzDataQuality.dbo.tb_collectiontimingdata m4 on m3.id=m4.id left join
+        VzDataQuality.dbo.r_transformation m5 on m4.tran_id=m5.ID_TRANSFORMATION
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zw.admin.server.dao.InventoryMapper">
+    <!--分页查询某一个表某一个字段某一个时间段有问题的日志-->
+    <select id="selectInventoryLog" resultType="java.util.Map">
+        select
+        m1.*, m2.is_null,
+        m2.regular,
+        m2.is_pk,
+        m2.remark,
+        m3.DataType dataType,
+        m3.DataLength dataLength,
+        m3.DataFormat dataFormat,
+        m4.Code base_dicts_code,
+        m4.Name base_dicts_name
+        from
+        VzDataQuality.dbo.tb_inventory m1
+        left join VzDataQuality.dbo.tb_collectionrule m2 on m1.column_id = m2.id
+        left join VzDataQuality.dbo.DataElements m3 on m2.data_id = m3.Id
+        left join VzDataQuality.dbo.BaseDicts m4 on m3.BaseDictId = m4.Id
+        <include refid="where" />
+        order by m1.create_time
+        offset #{offset} rows fetch next #{limit} rows only
+    </select>
+    <!--分页查询某一个表某一个字段某一个时间段有问题的日志有多少条数-->
+    <select id="selectInventoryCount" resultType="java.lang.Integer">
+        select count(1)
+        from
+        VzDataQuality.dbo.tb_inventory m1
+        <include refid="where" />
+    </select>
+    <sql id="where">
+        <where>
+            <if test="map.hdr_id != null and map.hdr_id != ''">
+                and m1.hdr_id = #{map.hdr_id}
+            </if>
+            <if test="map.column_id != null and map.column_id != ''">
+                and m1.column_id = #{map.column_id}
+            </if>
+            <if test="map.beginTime != null and map.beginTime != ''">
+                and m1.create_time &gt;= #{map.beginTime}
+            </if>
+            <if test="map.endTime != null and map.endTime != ''">
+                and m1.create_time &lt;= #{map.endTime}
+            </if>
+        </where>
+    </sql>
+</mapper>
