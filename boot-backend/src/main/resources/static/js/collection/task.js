@@ -276,7 +276,7 @@ function getPath(arr, str, newArr) {
 
 function mechanism() {
     return $.ajax({
-        url: 'http://' + ExternalConfig.fhir.host + '/global/base/mechanismList',
+        url: '/fhir/global/base/mechanismList',
         contentType: 'application/json',
         type: 'post',
         dataType: 'json',

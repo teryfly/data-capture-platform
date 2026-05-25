@@ -26,10 +26,6 @@ public class ConfigController {
         pentaho.put("password", externalServiceProperties.getPentaho().getPassword());
         config.put("pentaho", pentaho);
 
-        Map<String, Object> fhir = new HashMap<>();
-        fhir.put("host", externalServiceProperties.getFhir().getHost());
-        config.put("fhir", fhir);
-
         return config;
     }
 }
