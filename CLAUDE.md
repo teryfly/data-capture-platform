@@ -44,15 +44,18 @@ mvn clean package -DskipTests
 
 **CRITICAL:** This app depends on external services. All must be running for full functionality:
 
-- **Pentaho Server** at `192.168.120.95:8085` — receives ETL transformations via `/pentaho/importFolderAndFile` API
-  - Hardcoded URL in frontend (`task.js` line 184)
-  - Credentials: `Admin` / `password` (hardcoded in frontend)
-  - See [[connectors_and_external_dependencies]] for details
-- **FHIR Center** at `app.fhir.center:8011` — organization/mechanism list (`/global/base/mechanismList`)
-  - Called from frontend for dropdown data
-  - Hardcoded hostname
-- **SQL Server** at `192.168.120.231:1433` — `VzDataQuality` database
-  - See Tech Stack above
+- **Pentaho Server** — receives ETL transformations via `/pentaho/importFolderAndFile` API
+  - Configured via `external.pentaho.url` in `application.yml` (default: `http://192.168.120.95:8085`)
+  - Credentials via `external.pentaho.username` and `external.pentaho.password`
+  - Can be overridden with `PENTAHO_URL`, `PENTAHO_USERNAME`, `PENTAHO_PASSWORD` environment variables
+- **FHIR Center** — organization/mechanism list (`/global/base/mechanismList`)
+  - Configured via `external.fhir.host` in `application.yml` (default: `app.fhir.center:8011`)
+  - Can be overridden with `FHIR_HOST` environment variable
+- **SQL Server** — `VzDataQuality` database
+  - Configured via `spring.datasource.url` in `application.yml` (default: `192.168.120.231:1433`)
+  - Can be overridden with `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD` environment variables
+
+All external dependencies are now externalized via environment variables with sensible defaults in `application.yml`.
 
 ## Gotchas
 

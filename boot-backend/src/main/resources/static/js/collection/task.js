@@ -181,15 +181,13 @@ function getEditText() {
         return
     }
     $.ajax({
-        url: "http://192.168.120.95:8085/pentaho/importFolderAndFile",
-        //url: "http://192.168.120.209:8085/pentaho/importFolderAndFile",
+        url: ExternalConfig.pentaho.url + "/pentaho/importFolderAndFile",
         type: 'post',
         contentType: 'application/json',
         data: JSON.stringify({
-            //url: "http://localhost:8888/pentaho",
-            url: "http://localhost:8800/pentaho",
-            username: "Admin",
-            password: "password",
+            url: ExternalConfig.pentaho.url,
+            username: ExternalConfig.pentaho.username,
+            password: ExternalConfig.pentaho.password,
             orgNames: orgNames,
             nodeIds: nodeIds
         }),
@@ -278,7 +276,7 @@ function getPath(arr, str, newArr) {
 
 function mechanism() {
     return $.ajax({
-        url: 'http://app.fhir.center:8011/global/base/mechanismList',
+        url: 'http://' + ExternalConfig.fhir.host + '/global/base/mechanismList',
         contentType: 'application/json',
         type: 'post',
         dataType: 'json',

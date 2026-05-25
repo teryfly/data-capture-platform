@@ -6,9 +6,9 @@ spring:
       exclude: src/main/resources/**
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://192.168.120.231:1433;DatabaseName=VzDataQuality
-    username: sa
-    password: 123lab
+    url: jdbc:sqlserver://${DB_HOST:192.168.120.231}:${DB_PORT:1433};DatabaseName=${DB_NAME:VzDataQuality}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:123lab}
     druid:
       initialSize: 5
       minIdle: 5
@@ -38,8 +38,8 @@ spring:
     servlet:
       load-on-startup: 1
   redis:
-    host: localhost
-    port: 6379
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
   mail:
     default-encoding: UTF-8
     host: smtp.163.com
@@ -64,6 +64,13 @@ log:
     my: debug
   file: boot-backend/admin-server.log
   maxsize: 30MB
+external:
+  pentaho:
+    url: ${PENTAHO_URL:http://192.168.120.95:8085}
+    username: ${PENTAHO_USERNAME:Admin}
+    password: ${PENTAHO_PASSWORD:password}
+  fhir:
+    host: ${FHIR_HOST:app.fhir.center:8011}
 token:
   expire:
     seconds: 86400

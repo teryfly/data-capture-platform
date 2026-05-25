@@ -9,7 +9,7 @@
 #### 初始化工作
 1. 运行数据库脚本，在docs/db_script.sql
 2. 配置信息在application.yml里，数据库的用户名、密码、ip、端口等，根据情况修改一下
-
+boot-backend/src/main/resources/application.yml
 #### 使用说明
 
 

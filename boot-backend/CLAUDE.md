@@ -24,11 +24,29 @@ The `ktrtree/` sub-domain mirrors this four-layer structure independently within
 ## Entry Point & Config Files
 
 - Entry point: `HospitalSuperviseServerApplication.java` (`@SpringBootApplication`, no custom scan needed)
-- `resources/application.yml` — datasource, Redis, mail, file upload path (`files.path`), MyBatis aliases
+- `resources/application.yml` — datasource, Redis, mail, file upload path (`files.path`), MyBatis aliases, external service configs
 - `resources/bootstrap.yml` — early Spring context config (loaded before `application.yml`)
 - `resources/quartz.properties` — Quartz thread pool and job store settings
 - `resources/ehcache.xml` — EhCache region config (used by Shiro session cache)
 - `resources/logback-admin.xml` — logging config; referenced by `logging.config` in `application.yml`
+
+## External Service Configuration
+
+External dependencies are configured in `application.yml` with environment variable overrides:
+
+| Property | Environment Variable | Default |
+|----------|---------------------|---------|
+| `spring.datasource.url` | `DB_HOST`, `DB_PORT`, `DB_NAME` | `192.168.120.231:1433`, `VzDataQuality` |
+| `spring.datasource.username` | `DB_USERNAME` | `sa` |
+| `spring.datasource.password` | `DB_PASSWORD` | `123lab` |
+| `spring.redis.host` | `REDIS_HOST` | `localhost` |
+| `spring.redis.port` | `REDIS_PORT` | `6379` |
+| `external.pentaho.url` | `PENTAHO_URL` | `http://192.168.120.95:8085` |
+| `external.pentaho.username` | `PENTAHO_USERNAME` | `Admin` |
+| `external.pentaho.password` | `PENTAHO_PASSWORD` | `password` |
+| `external.fhir.host` | `FHIR_HOST` | `app.fhir.center:8011` |
+
+Frontend apps load external service configs via `/config` endpoint (`ConfigController`).
 
 ## Conventions Specific to This Module
 
